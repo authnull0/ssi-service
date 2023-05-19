@@ -72,14 +72,22 @@ func run() error {
 	}
 	// set log config from config file
 	if cfg.Server.LogLocation != "" {
-		file, err := os.OpenFile(createLogFile(cfg.Server.LogLocation), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		filePath, err := createLogFile(cfg.Server.LogLocation)
 		if err == nil {
-			logrus.SetOutput(file)
+			file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+			if err == nil {
+				logrus.SetOutput(file)
+			} else {
+				logrus.WithError(err).Error("Failed to open log file")
+				logrus.Info("Failed to log to file, using default stdout")
+			}
 		} else {
+			logrus.WithError(err).Errorf("Failed to create log directory: %s", cfg.Server.LogLocation)
 			logrus.Info("Failed to log to file, using default stdout")
 		}
-		defer file.Close()
 	}
+
+	logrus.Infof("Log file location: %s", cfg.Server.LogLocation)
 
 	// set up schema caching based on config
 	if cfg.Server.EnableSchemaCaching {
@@ -191,6 +199,15 @@ func newTracerProvider(cfg config.SSIServiceConfig) (*sdktrace.TracerProvider, e
 	return tp, nil
 }
 
-func createLogFile(location string) string {
-	return location + "/" + config.ServiceName + "-" + time.Now().Format(time.RFC3339) + ".log"
+func createLogFile(location string) (string, error) {
+	timestamp := time.Now().Format("2006-01-02T15_04_05-07_00")
+	filePath := location + "/" + config.ServiceName + "-" + timestamp + ".log"
+
+	// Create the directory if it doesn't exist
+	err := os.MkdirAll(location, os.ModePerm)
+	if err != nil {
+		return "", err
+	}
+
+	return filePath, nil
 }
