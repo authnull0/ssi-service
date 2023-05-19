@@ -13,9 +13,9 @@ read_timeout = 5000000000
 write_timeout = 5000000000
 shutdown_timeout = 5000000000
 
-log_location = "logs"
+log_location = "./logs"
 # options: trace, debug, info, warning, error, fatal, panic
-log_level = "debug"
+log_level = "info"
 
 enable_schema_caching = true
 enable_allow_all_cors = true
