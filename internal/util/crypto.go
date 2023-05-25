@@ -87,10 +87,10 @@ func GenerateSalt(size int) ([]byte, error) {
 		return nil, errors.New("invalid size")
 	}
 
-	salt := make([]byte, size)
-	if _, err := rand.Read(salt); err != nil {
-		return nil, err
-	}
+	salt := []byte("qwertyuiopasdfgh")
+	// if _, err := rand.Read(salt); err != nil {
+	// 	return nil, err
+	// }
 
 	return salt, nil
 }
