@@ -26,8 +26,8 @@ service_endpoint = "http://localhost:8080"
 storage = "redis"
 
 [services.storage_option]
-address = "redis:6379"
-password = ""
+address = "195.201.165.12:6379"
+password = "authnull@kloudone.com"
 
 # per-service configuration
 [services.keystore]
