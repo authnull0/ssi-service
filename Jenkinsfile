@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-            git credentialsId: 'amanpd-github-credentials', url: 'https://github.com/authnull0/ssi-service.git', branch: 'persistance-fix'
+            git credentialsId: 'amanpd-github-credentials', url: 'https://github.com/authnull0/ssi-service.git', branch: 'production'
             }
         }
         stage('Build Docker Image') {
@@ -38,7 +38,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    def dockerCommand = "-d -p 5000:5000 --name=ssi-service-${env.BUILD_ID} ${env.dockerImage}"
+                    def dockerCommand = "-d --network host --name=ssi-service-${env.BUILD_ID} ${env.dockerImage}"
                     sh "docker run ${dockerCommand}"
                 }
             }
