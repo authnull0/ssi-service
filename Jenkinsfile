@@ -12,6 +12,21 @@ pipeline {
             git credentialsId: 'amanpd-github-credentials', url: 'https://github.com/authnull0/ssi-service.git', branch: 'production'
             }
         }
+        stage('Sonarqube Scanning') {
+            environment {
+                scannerHome = tool 'SonarQubeScanner'
+                scannerCmd = "${scannerHome}/bin/sonar-scanner"
+                scannerCmdOptions = "-Dsonar.projectKey=ssi-service -Dsonar.sources=build,cmd,config,doc,gui,integration,internal,pkg,sip -Dsonar.host.url=http://195.201.165.12:9000"
+                }
+            steps {
+                withSonarQubeEnv(installationName: 'sonarqube-server') {
+                sh "${scannerCmd} ${scannerCmdOptions}"
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+                }
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 script {
