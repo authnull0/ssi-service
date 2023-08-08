@@ -16,7 +16,7 @@ pipeline {
             environment {
                 scannerHome = tool 'SonarQubeScanner'
                 scannerCmd = "${scannerHome}/bin/sonar-scanner"
-                scannerCmdOptions = "-Dsonar.projectKey=ssi-service -Dsonar.sources=build,cmd,config,doc,gui,integration,internal,pkg,sip -Dsonar.host.url=http://195.201.165.12:9000"
+                scannerCmdOptions = "-Dsonar.projectKey=ssi-service -Dsonar.sources=./,build,cmd,config,doc,gui,integration,internal,pkg,sip -Dsonar.host.url=http://195.201.165.12:9000"
                 }
             steps {
                 withSonarQubeEnv(installationName: 'sonarqube-server') {
