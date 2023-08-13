@@ -1,0 +1,33 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Build and Store
+
+on:
+  push:
+    branches: [ "production" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Golang
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+
+    - name: Build Golang application
+      run: |
+            go mod download
+            go mod tidy
+            go build -o main ./cmd/main.go
+            
+    - name: Archive binary
+      uses: actions/upload-artifact@v3
+      with:
+          name: ssi-service-artifact-${{github.run_number}}
+          path: ./main
