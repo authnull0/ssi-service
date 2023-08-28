@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-            git credentialsId: 'amanpd-github-credentials', url: 'https://github.com/authnull0/ssi-service.git', branch: 'production'
+            git credentialsId: 'amanpd-github-credentials', url: 'https://github.com/authnull0/ssi-service.git', branch: 'development'
             }
         }
         stage('Sonarqube Scanning') {
