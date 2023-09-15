@@ -38,6 +38,24 @@ pipeline {
                 }
             }
         }
+        stage('Trivy Scan Docker Image') {
+            steps {
+                script {
+                    def formatOption = "--format template --template \"@/usr/local/share/trivy/templates/html.tpl\""
+                    sh """
+                    trivy image ${env.dockerImage} $formatOption --timeout 10m --output report.html || true
+                    """
+            }
+        publishHTML(target: [
+          allowMissing: true,
+          alwaysLinkToLastBuild: false,
+          keepAll: true,
+          reportDir: ".",
+          reportFiles: "report.html",
+          reportName: "Trivy Report",
+        ])
+            }
+        }
         stage('Stop & Remove older image') {
             steps {
                 script {
