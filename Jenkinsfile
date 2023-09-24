@@ -56,7 +56,7 @@ pipeline {
         ])
             }
         }
-        stage('Stop & Remove older image') {
+/*        stage('Stop & Remove older image') {
             steps {
                 script {
                     def previousBuildNumber = env.BUILD_ID.toInteger() - 1
@@ -68,6 +68,27 @@ pipeline {
                 }
             }
         }
+*/
+        stage('Stop & Remove older image') {
+            steps {
+                script {
+                    def currentBuildNumber = env.BUILD_ID.toInteger()
+                    
+                    // Loop through previous builds from n-1 down to 1 till finds any running container
+                    for (int buildNumber = currentBuildNumber - 1; buildNumber >= 1; buildNumber--) {
+                        def dockerCommand = "ssi-service-${buildNumber}"
+                        def buildStatus = sh(script: "docker ps -a | grep ${dockerCommand}", returnStatus: true)
+                        
+                    if (buildStatus == 0) {
+                            sh "docker stop ${dockerCommand}"
+                            sh "docker rm ${dockerCommand}"
+                            break
+                        } 
+                    }
+                }
+            }
+        }
+
         stage('Run Docker Container') {
             steps {
                 script {
