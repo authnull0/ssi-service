@@ -27,6 +27,12 @@ pipeline {
                 }
             }
         }
+        stage('Scan for git-secrets') {
+            steps {
+                sh 'git secrets --scan -r'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
