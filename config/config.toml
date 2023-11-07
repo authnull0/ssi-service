@@ -27,7 +27,7 @@ storage = "redis"
 
 [services.storage_option]
 address = "redis.authnull-io.svc.cluster.local:6379"
-password = "1bs0E7VxQy"
+password = "8OKFF61VSE"
 
 # per-service configuration
 [services.keystore]
