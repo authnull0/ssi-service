@@ -42,5 +42,10 @@ pipeline {
                 sh 'docker logout ${DOCKER_REGISTRY}'
             }
         }
+        stage('Remove Docker Image') {
+            steps {
+                sh 'docker rmi ${DOCKER_IMAGE}'
+            }
+        }
     }
 }
