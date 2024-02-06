@@ -19,7 +19,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-            git credentialsId: 'amanpd-github-credentials', url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
+            git credentialsId: '3d061b0d-704f-434d-8c70-dce67d4c42d1', url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
             }
         }
         stage('Build Docker Image') {
