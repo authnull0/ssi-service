@@ -34,6 +34,7 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Length", string(len(jsonData)))
 	w.WriteHeader(statusCode)
 
 	// send response payload to client
