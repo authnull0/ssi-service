@@ -28,7 +28,7 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 
 	// convert response payload to json
 	jsonData, err := json.Marshal(data)
-	log.Default().Println("jsonData", jsonData)
+	log.Default().Println("jsonData", string(jsonData))
 	if err != nil {
 		return err
 	}
