@@ -2,6 +2,7 @@ package framework
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/goccy/go-json"
@@ -27,6 +28,7 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 
 	// convert response payload to json
 	jsonData, err := json.Marshal(data)
+	log.Default().Println("jsonData", jsonData)
 	if err != nil {
 		return err
 	}
@@ -43,6 +45,7 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 func RespondError(ctx context.Context, w http.ResponseWriter, err error) error {
 	// if the cause of the error provided is a `SafeError`, construct an ErrorResponse
 	// using the contents of SafeError and send it back to the client
+	log.Default().Println("RespondError", err)
 	var webErr *SafeError
 	if ok := errors.As(errors.Cause(err), &webErr); ok {
 		er := ErrorResponse{
@@ -67,6 +70,5 @@ func RespondError(ctx context.Context, w http.ResponseWriter, err error) error {
 	if err := Respond(ctx, w, er, http.StatusInternalServerError); err != nil {
 		return err
 	}
-
 	return nil
 }
