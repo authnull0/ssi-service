@@ -147,19 +147,21 @@ type GetCredentialResponse struct {
 // @Router      /v1/credentials/{id} [get]
 func (cr CredentialRouter) GetCredential(ctx context.Context, w http.ResponseWriter, _ *http.Request) error {
 	log.Default().Println("GetCredential Start time ", time.Now().String())
-	// id := framework.GetParam(ctx, IDParam)
-	// if id == nil {
-	// 	errMsg := "cannot get credential without ID parameter"
-	// 	logrus.Error(errMsg)
-	// 	return framework.NewRequestErrorMsg(errMsg, http.StatusBadRequest)
-	// }
+	id := framework.GetParam(ctx, IDParam)
+	if id == nil {
+		errMsg := "cannot get credential without ID parameter"
+		logrus.Error(errMsg)
+		return framework.NewRequestErrorMsg(errMsg, http.StatusBadRequest)
+	}
 
-	// gotCredential, err := cr.service.GetCredential(ctx, credential.GetCredentialRequest{ID: *id})
-	// if err != nil {
-	// 	errMsg := fmt.Sprintf("could not get credential with id: %s", *id)
-	// 	logrus.WithError(err).Error(errMsg)
-	// 	return framework.NewRequestError(errors.Wrap(err, errMsg), http.StatusInternalServerError)
-	// }
+	gotCredential, err := cr.service.GetCredential(ctx, credential.GetCredentialRequest{ID: *id})
+	if err != nil {
+		errMsg := fmt.Sprintf("could not get credential with id: %s", *id)
+		logrus.WithError(err).Error(errMsg)
+		return framework.NewRequestError(errors.Wrap(err, errMsg), http.StatusInternalServerError)
+	}
+
+	log.Default().Println("Got Credential ", gotCredential)
 
 	// resp := GetCredentialResponse{
 	// 	ID:            gotCredential.ID,
