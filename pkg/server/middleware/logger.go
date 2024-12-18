@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"time"
 
@@ -43,6 +44,10 @@ func Logger() framework.Middleware {
 				r.Method, r.URL.Path, r.RemoteAddr,
 				v.StatusCode, time.Since(v.Now),
 			)
+
+			if err != nil {
+				log.Default().Println("error in handler", err)
+			}
 
 			return err
 		}
