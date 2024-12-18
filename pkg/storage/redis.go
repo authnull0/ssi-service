@@ -40,8 +40,15 @@ func init() {
 	}
 }
 
+var address string
+
+var password string
+
 func (b *RedisDB) Init(i interface{}) error {
 	options := i.(map[string]interface{})
+
+	address = options["address"].(string)
+	password = options["password"].(string)
 
 	client := goredislib.NewClient(&goredislib.Options{
 		Addr:     options["address"].(string),
@@ -51,6 +58,18 @@ func (b *RedisDB) Init(i interface{}) error {
 	b.db = client
 
 	return nil
+}
+
+func (b *RedisDB) GetRedisConnection() *goredislib.Client {
+
+	client := goredislib.NewClient(&goredislib.Options{
+		Addr:     address,
+		Password: password,
+	})
+
+	// b.db = client
+
+	return client
 }
 
 func (b *RedisDB) URI() string {
@@ -164,6 +183,8 @@ func (b *RedisDB) Read(ctx context.Context, namespace, key string) ([]byte, erro
 func (b *RedisDB) ReadPrefix(ctx context.Context, namespace, prefix string) (map[string][]byte, error) {
 	log.Default().Println("Start Time for ReadPrefix", time.Now().String())
 	namespacePrefix := getRedisKey(namespace, prefix)
+
+	b.db = b.GetRedisConnection()
 
 	keys, err := readAllKeys(ctx, namespacePrefix, b)
 	if err != nil {
