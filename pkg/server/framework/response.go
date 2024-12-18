@@ -40,6 +40,7 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Length", length)
+	w.Header().Set("Transfer-Encoding", "chunked")
 	w.WriteHeader(statusCode)
 
 	// send response payload to client
