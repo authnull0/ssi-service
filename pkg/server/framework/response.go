@@ -43,7 +43,13 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 	w.WriteHeader(statusCode)
 
 	// send response payload to client
-	_, err = w.Write(jsonData)
+	responsecode, err := w.Write(jsonData)
+	if err != nil {
+		log.Default().Println("error in writing response", err)
+	}
+
+	log.Default().Println("responsecode", responsecode)
+
 	return err
 }
 
