@@ -16,7 +16,7 @@ import (
 const (
 	NamespaceKeySeparator = ":"
 	Pong                  = "PONG"
-	RedisScanBatchSize    = 10
+	RedisScanBatchSize    = 1000
 	MaxElapsedTime        = 6 * time.Second
 )
 
@@ -234,6 +234,35 @@ func (b *RedisDB) ReadAllKeys(ctx context.Context, namespace string) ([]string, 
 
 // TODO: This potentially could dangerous as it might run out of memory as we populate allKeys
 func readAllKeys(ctx context.Context, namespace string, b *RedisDB) ([]string, error) {
+	log.Default().Println("Start Time for readAllKeys", time.Now().String())
+	var cursor uint64
+
+	var allKeys []string
+
+	for {
+		keys, nextCursor, err := b.db.Scan(ctx, cursor, namespace+"*", RedisScanBatchSize).Result()
+		if err != nil {
+			return nil, errors.Wrap(err, "scan error")
+		}
+
+		allKeys = append(allKeys, keys...)
+
+		log.Default().Println("keys value", allKeys)
+
+		if nextCursor == 0 {
+			break
+		}
+
+		cursor = nextCursor
+	}
+	log.Default().Println("End Time for readAllKeys", time.Now().String())
+
+	log.Default().Println("keys", len(allKeys))
+
+	return allKeys, nil
+}
+
+func readAllKeyswithValue(ctx context.Context, namespace string, b *RedisDB) ([]string, error) {
 	log.Default().Println("Start Time for readAllKeys", time.Now().String())
 	var cursor uint64
 
