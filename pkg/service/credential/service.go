@@ -383,23 +383,23 @@ func (s Service) GetCredential(ctx context.Context, request GetCredentialRequest
 
 	logrus.Debugf("getting credential: %s", request.ID)
 
-	// gotCred, err := s.storage.GetCredential(ctx, request.ID)
-	// if err != nil {
-	// 	return nil, util.LoggingErrorMsgf(err, "could not get credential: %s", request.ID)
-	// }
-	// if !gotCred.IsValid() {
-	// 	return nil, util.LoggingNewErrorf("credential returned is not valid: %s", request.ID)
-	// }
-	// response := GetCredentialResponse{
-	// 	credint.Container{
-	// 		ID:            gotCred.CredentialID,
-	// 		Credential:    gotCred.Credential,
-	// 		CredentialJWT: gotCred.CredentialJWT,
-	// 	},
-	// }
+	gotCred, err := s.storage.GetCredential(ctx, request.ID)
+	if err != nil {
+		return nil, util.LoggingErrorMsgf(err, "could not get credential: %s", request.ID)
+	}
+	if !gotCred.IsValid() {
+		return nil, util.LoggingNewErrorf("credential returned is not valid: %s", request.ID)
+	}
+	response := GetCredentialResponse{
+		credint.Container{
+			ID:            gotCred.CredentialID,
+			Credential:    gotCred.Credential,
+			CredentialJWT: gotCred.CredentialJWT,
+		},
+	}
 
 	log.Default().Println("GetCredential End Time ", time.Now().String())
-	return &GetCredentialResponse{}, nil
+	return &response, nil
 }
 
 func (s Service) GetCredentialsByIssuer(ctx context.Context, request GetCredentialByIssuerRequest) (*GetCredentialsResponse, error) {

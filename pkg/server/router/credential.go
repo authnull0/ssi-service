@@ -2,13 +2,13 @@ package router
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	credsdk "github.com/TBD54566975/ssi-sdk/credential"
+	"github.com/goccy/go-json"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	credmodel "github.com/tbd54566975/ssi-service/internal/credential"
@@ -179,6 +179,7 @@ func (cr CredentialRouter) GetCredential(ctx context.Context, w http.ResponseWri
 		"status":  "success",
 		"message": "GetCredential",
 	}
+
 	return framework.Respond(ctx, w, resp, http.StatusOK)
 }
 
