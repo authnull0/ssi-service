@@ -53,9 +53,7 @@ require (
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
-	github.com/lestrrat-go/httprc v1.0.4 // indirect
 	github.com/lestrrat-go/iter v1.0.2 // indirect
-	github.com/lestrrat-go/jwx/v2 v2.0.13 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/multiformats/go-base32 v0.1.0 // indirect
 	github.com/multiformats/go-base36 v0.2.0 // indirect
@@ -66,7 +64,6 @@ require (
 	github.com/pquerna/cachecontrol v0.1.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/santhosh-tekuri/jsonschema/v5 v5.2.0 // indirect
-	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/stoewer/go-strcase v1.2.1 // indirect
 	github.com/yuin/gopher-lua v1.1.0 // indirect
 	golang.org/x/sys v0.12.0 // indirect
