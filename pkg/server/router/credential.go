@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -161,7 +162,12 @@ func (cr CredentialRouter) GetCredential(ctx context.Context, w http.ResponseWri
 		return framework.NewRequestError(errors.Wrap(err, errMsg), http.StatusInternalServerError)
 	}
 
-	log.Default().Println("Got Credential ", gotCredential)
+	jsonvalue, err := json.Marshal(gotCredential)
+	if err != nil {
+		log.Default().Println("error in marshalling", err)
+	}
+
+	log.Default().Println("Got Credential ", string(jsonvalue))
 
 	// resp := GetCredentialResponse{
 	// 	ID:            gotCredential.ID,
