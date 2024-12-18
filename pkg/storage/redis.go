@@ -16,7 +16,7 @@ import (
 const (
 	NamespaceKeySeparator = ":"
 	Pong                  = "PONG"
-	RedisScanBatchSize    = 1000
+	RedisScanBatchSize    = 10
 	MaxElapsedTime        = 6 * time.Second
 )
 
@@ -162,7 +162,7 @@ func (b *RedisDB) Read(ctx context.Context, namespace, key string) ([]byte, erro
 }
 
 func (b *RedisDB) ReadPrefix(ctx context.Context, namespace, prefix string) (map[string][]byte, error) {
-	log.Default().Println("Start Time", time.Now().String())
+	log.Default().Println("Start Time for ReadPrefix", time.Now().String())
 	namespacePrefix := getRedisKey(namespace, prefix)
 
 	keys, err := readAllKeys(ctx, namespacePrefix, b)
@@ -170,7 +170,7 @@ func (b *RedisDB) ReadPrefix(ctx context.Context, namespace, prefix string) (map
 		return nil, errors.Wrap(err, "read all keys")
 	}
 	log.Default().Println("keys", len(keys))
-	log.Default().Println("End Time", time.Now().String())
+	log.Default().Println("End Time for ReadPrefix", time.Now().String())
 	return readAll(ctx, keys, b)
 }
 
@@ -185,7 +185,7 @@ func (b *RedisDB) ReadAll(ctx context.Context, namespace string) (map[string][]b
 
 // TODO: This potentially could dangerous as it might run out of memory as we populate result
 func readAll(ctx context.Context, keys []string, b *RedisDB) (map[string][]byte, error) {
-	log.Default().Println("Start Time", time.Now().String())
+	log.Default().Println("Start Time for ReadAll", time.Now().String())
 	result := make(map[string][]byte, len(keys))
 
 	if len(keys) == 0 {
@@ -209,7 +209,7 @@ func readAll(ctx context.Context, keys []string, b *RedisDB) (map[string][]byte,
 		result[key] = byteValue
 	}
 	log.Default().Println("result", len(result))
-	log.Default().Println("End Time", time.Now().String())
+	log.Default().Println("End Time for ReadAll", time.Now().String())
 	return result, nil
 }
 
@@ -234,7 +234,7 @@ func (b *RedisDB) ReadAllKeys(ctx context.Context, namespace string) ([]string, 
 
 // TODO: This potentially could dangerous as it might run out of memory as we populate allKeys
 func readAllKeys(ctx context.Context, namespace string, b *RedisDB) ([]string, error) {
-	log.Default().Println("Start Time", time.Now().String())
+	log.Default().Println("Start Time for readAllKeys", time.Now().String())
 	var cursor uint64
 
 	var allKeys []string
@@ -247,13 +247,17 @@ func readAllKeys(ctx context.Context, namespace string, b *RedisDB) ([]string, e
 
 		allKeys = append(allKeys, keys...)
 
+		log.Default().Println("keys value", allKeys)
+
 		if nextCursor == 0 {
 			break
 		}
 
 		cursor = nextCursor
 	}
-	log.Default().Println("End Time", time.Now().String())
+	log.Default().Println("End Time for readAllKeys", time.Now().String())
+
+	log.Default().Println("keys", len(allKeys))
 
 	return allKeys, nil
 }
