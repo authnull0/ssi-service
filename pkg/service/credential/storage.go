@@ -359,12 +359,12 @@ func buildStoredCredential(request StoreCredentialRequest) (*StoredCredential, e
 }
 
 func (cs *Storage) GetCredential(ctx context.Context, id string) (*StoredCredential, error) {
-	log.Default().Println("GetCredential Start Time ", time.Now().String())
+	log.Default().Println("Storage GetCredential Start Time ", time.Now().String())
 	return cs.getCredential(ctx, id, credentialNamespace)
 }
 
 func (cs *Storage) getCredential(ctx context.Context, id string, namespace string) (*StoredCredential, error) {
-	log.Default().Println("GetCredential Start Time ", time.Now().String())
+	log.Default().Println("cs.GetCredential Start Time ", time.Now().String())
 	prefixValues, err := cs.db.ReadPrefix(ctx, namespace, id)
 	if err != nil {
 		return nil, util.LoggingErrorMsgf(err, "could not get credential from storage: %s", id)
@@ -387,7 +387,7 @@ func (cs *Storage) getCredential(ctx context.Context, id string, namespace strin
 	if err = json.Unmarshal(credBytes, &stored); err != nil {
 		return nil, util.LoggingErrorMsgf(err, "unmarshalling stored credential: %s", id)
 	}
-	log.Default().Println("GetCredential End Time ", time.Now().String())
+	log.Default().Println("cs.GetCredential End Time ", time.Now().String())
 	return &stored, nil
 }
 
