@@ -17,7 +17,7 @@ const (
 	NamespaceKeySeparator = ":"
 	Pong                  = "PONG"
 	RedisScanBatchSize    = 50000
-	MaxElapsedTime        = 30 * time.Second
+	MaxElapsedTime        = 300 * time.Second
 )
 
 type RedisDB struct {
