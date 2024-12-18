@@ -16,8 +16,8 @@ import (
 const (
 	NamespaceKeySeparator = ":"
 	Pong                  = "PONG"
-	RedisScanBatchSize    = 25000
-	MaxElapsedTime        = 6 * time.Second
+	RedisScanBatchSize    = 50000
+	MaxElapsedTime        = 30 * time.Second
 )
 
 type RedisDB struct {

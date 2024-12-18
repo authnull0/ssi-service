@@ -364,34 +364,34 @@ func (cs *Storage) GetCredential(ctx context.Context, id string) (*StoredCredent
 }
 
 func (cs *Storage) getCredential(ctx context.Context, id string, namespace string) (*StoredCredential, error) {
-	// log.Default().Println("cs.GetCredential Start Time ", time.Now().String())
-	// prefixValues, err := cs.db.ReadPrefix(ctx, namespace, id)
-	// if err != nil {
-	// 	return nil, util.LoggingErrorMsgf(err, "could not get credential from storage: %s", id)
-	// }
-	// if len(prefixValues) > 1 {
-	// 	return nil, util.LoggingNewErrorf("could not get credential from storage; multiple prefix values matched credential id: %s", id)
-	// }
-
-	// // since we know the map now only has a single value, we break after the first element
-	// var credBytes []byte
-	// for _, v := range prefixValues {
-	// 	credBytes = v
-	// 	break
-	// }
-	// if len(credBytes) == 0 {
-	// 	return nil, util.LoggingNewErrorf("could not get credential from storage %s with id: %s", credentialNotFoundErrMsg, id)
-	// }
-
-	credbytes, err := cs.db.Read(ctx, "credential", "89370588-7e0c-4aa5-bf28-f6ee2e80b06e-is:did:key:z6Mkkhk1xKGZcgScbEg9qpFbV9ZEg13nTGh6soS7Z1R9V24v-su:did:key:z6MktqDyivH6vS7p6iRUZyT42ecEdWYso1eUw2UTn6KS8C7f-sc:ad143eea-ff01-4ee8-bd70-58fdcc77653")
+	log.Default().Println("cs.GetCredential Start Time ", time.Now().String())
+	prefixValues, err := cs.db.ReadPrefix(ctx, namespace, id)
 	if err != nil {
 		return nil, util.LoggingErrorMsgf(err, "could not get credential from storage: %s", id)
 	}
+	if len(prefixValues) > 1 {
+		return nil, util.LoggingNewErrorf("could not get credential from storage; multiple prefix values matched credential id: %s", id)
+	}
 
-	log.Default().Println("credentail value ", string(credbytes))
+	// since we know the map now only has a single value, we break after the first element
+	var credBytes []byte
+	for _, v := range prefixValues {
+		credBytes = v
+		break
+	}
+	if len(credBytes) == 0 {
+		return nil, util.LoggingNewErrorf("could not get credential from storage %s with id: %s", credentialNotFoundErrMsg, id)
+	}
+
+	// credbytes, err := cs.db.Read(ctx, "credential", "89370588-7e0c-4aa5-bf28-f6ee2e80b06e-is:did:key:z6Mkkhk1xKGZcgScbEg9qpFbV9ZEg13nTGh6soS7Z1R9V24v-su:did:key:z6MktqDyivH6vS7p6iRUZyT42ecEdWYso1eUw2UTn6KS8C7f-sc:ad143eea-ff01-4ee8-bd70-58fdcc77653")
+	// if err != nil {
+	// 	return nil, util.LoggingErrorMsgf(err, "could not get credential from storage: %s", id)
+	// }
+
+	log.Default().Println("credentail value ", string(credBytes))
 
 	var stored StoredCredential
-	if err = json.Unmarshal(credbytes, &stored); err != nil {
+	if err = json.Unmarshal(credBytes, &stored); err != nil {
 		return nil, util.LoggingErrorMsgf(err, "unmarshalling stored credential: %s", id)
 	}
 	log.Default().Println("cs.GetCredential End Time ", time.Now().String())
