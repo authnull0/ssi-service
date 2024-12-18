@@ -163,12 +163,16 @@ func (s *SSIServer) CredentialAPI(service svcframework.Service) (err error) {
 	}
 
 	credentialHandlerPath := V1Prefix + CredentialsPrefix
+
+	credentialHandlerPathV1 := V1Prefix + CredentialsPrefix + "/getCredential"
+
 	statusHandlerPath := V1Prefix + CredentialsPrefix + StatusPrefix
 
 	// Credentials
 	s.Handle(http.MethodPut, credentialHandlerPath, credRouter.CreateCredential)
 	s.Handle(http.MethodGet, credentialHandlerPath, credRouter.GetCredentials)
 	s.Handle(http.MethodGet, path.Join(credentialHandlerPath, "/:id"), credRouter.GetCredential)
+	s.Handle(http.MethodPut, path.Join(credentialHandlerPathV1, "/:id"), credRouter.GetCredential)
 	s.Handle(http.MethodPut, path.Join(credentialHandlerPath, VerificationPath), credRouter.VerifyCredential)
 	s.Handle(http.MethodDelete, path.Join(credentialHandlerPath, "/:id"), credRouter.DeleteCredential)
 
