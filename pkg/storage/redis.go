@@ -249,7 +249,7 @@ func readAllKeys(ctx context.Context, namespace string, b *RedisDB) ([]string, e
 
 		log.Default().Println("keys value", allKeys)
 
-		if nextCursor == 0 {
+		if nextCursor == 0 || len(keys) > 0 {
 			break
 		}
 
