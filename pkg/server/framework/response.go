@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/goccy/go-json"
 	"github.com/pkg/errors"
@@ -34,12 +33,11 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 		return err
 	}
 
-	len := len(jsonData)
+	// len := len(jsonData)
 
-	length := strconv.Itoa(len)
+	// length := strconv.Itoa(len)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", length)
 	w.Header().Set("Transfer-Encoding", "chunked")
 	w.WriteHeader(statusCode)
 
