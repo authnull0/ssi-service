@@ -16,7 +16,7 @@ import (
 const (
 	NamespaceKeySeparator = ":"
 	Pong                  = "PONG"
-	RedisScanBatchSize    = 1000
+	RedisScanBatchSize    = 25000
 	MaxElapsedTime        = 6 * time.Second
 )
 
