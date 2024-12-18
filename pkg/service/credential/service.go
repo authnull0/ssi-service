@@ -3,6 +3,7 @@ package credential
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -378,6 +379,7 @@ func (s Service) VerifyCredential(ctx context.Context, request VerifyCredentialR
 }
 
 func (s Service) GetCredential(ctx context.Context, request GetCredentialRequest) (*GetCredentialResponse, error) {
+	log.Default().Println("GetCredential Start Time ", time.Now().String())
 
 	logrus.Debugf("getting credential: %s", request.ID)
 
@@ -395,6 +397,7 @@ func (s Service) GetCredential(ctx context.Context, request GetCredentialRequest
 			CredentialJWT: gotCred.CredentialJWT,
 		},
 	}
+	log.Default().Println("GetCredential End Time ", time.Now().String())
 	return &response, nil
 }
 

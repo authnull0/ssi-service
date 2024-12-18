@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"context"
 	"io"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/dimfeld/httptreemux/v5"
 	"github.com/pkg/errors"
@@ -12,11 +14,14 @@ import (
 
 // GetParam is a utility to get a path parameter from context, nil if not found
 func GetParam(ctx context.Context, param string) *string {
+	log.Default().Println("GetParam Start Time ", time.Now().String())
 	params := httptreemux.ContextParams(ctx)
 	method, ok := params[param]
 	if !ok {
 		return nil
 	}
+	log.Default().Println("GetParam End Time ", time.Now().String())
+
 	return &method
 }
 

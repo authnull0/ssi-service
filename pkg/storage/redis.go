@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -161,13 +162,15 @@ func (b *RedisDB) Read(ctx context.Context, namespace, key string) ([]byte, erro
 }
 
 func (b *RedisDB) ReadPrefix(ctx context.Context, namespace, prefix string) (map[string][]byte, error) {
+	log.Default().Println("Start Time", time.Now().String())
 	namespacePrefix := getRedisKey(namespace, prefix)
 
 	keys, err := readAllKeys(ctx, namespacePrefix, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "read all keys")
 	}
-
+	log.Default().Println("keys", len(keys))
+	log.Default().Println("End Time", time.Now().String())
 	return readAll(ctx, keys, b)
 }
 
@@ -182,6 +185,7 @@ func (b *RedisDB) ReadAll(ctx context.Context, namespace string) (map[string][]b
 
 // TODO: This potentially could dangerous as it might run out of memory as we populate result
 func readAll(ctx context.Context, keys []string, b *RedisDB) (map[string][]byte, error) {
+	log.Default().Println("Start Time", time.Now().String())
 	result := make(map[string][]byte, len(keys))
 
 	if len(keys) == 0 {
@@ -204,7 +208,8 @@ func readAll(ctx context.Context, keys []string, b *RedisDB) (map[string][]byte,
 		key := keys[i][namespaceDashIndex+1:]
 		result[key] = byteValue
 	}
-
+	log.Default().Println("result", len(result))
+	log.Default().Println("End Time", time.Now().String())
 	return result, nil
 }
 
@@ -229,6 +234,7 @@ func (b *RedisDB) ReadAllKeys(ctx context.Context, namespace string) ([]string, 
 
 // TODO: This potentially could dangerous as it might run out of memory as we populate allKeys
 func readAllKeys(ctx context.Context, namespace string, b *RedisDB) ([]string, error) {
+	log.Default().Println("Start Time", time.Now().String())
 	var cursor uint64
 
 	var allKeys []string
@@ -247,6 +253,7 @@ func readAllKeys(ctx context.Context, namespace string, b *RedisDB) ([]string, e
 
 		cursor = nextCursor
 	}
+	log.Default().Println("End Time", time.Now().String())
 
 	return allKeys, nil
 }

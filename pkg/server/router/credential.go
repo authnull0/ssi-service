@@ -3,7 +3,9 @@ package router
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
+	"time"
 
 	credsdk "github.com/TBD54566975/ssi-sdk/credential"
 	"github.com/pkg/errors"
@@ -144,6 +146,7 @@ type GetCredentialResponse struct {
 // @Failure     500 {string} string "Internal server error"
 // @Router      /v1/credentials/{id} [get]
 func (cr CredentialRouter) GetCredential(ctx context.Context, w http.ResponseWriter, _ *http.Request) error {
+	log.Default().Println("GetCredential Start time ", time.Now().String())
 	id := framework.GetParam(ctx, IDParam)
 	if id == nil {
 		errMsg := "cannot get credential without ID parameter"
