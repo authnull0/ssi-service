@@ -169,15 +169,10 @@ func (cr CredentialRouter) GetCredential(ctx context.Context, w http.ResponseWri
 
 	log.Default().Println("Got Credential ", string(jsonvalue))
 
-	// resp := GetCredentialResponse{
-	// 	ID:            gotCredential.ID,
-	// 	Credential:    gotCredential.Credential,
-	// 	CredentialJWT: gotCredential.CredentialJWT,
-	// }
-
-	resp := map[string]interface{}{
-		"status":  "success",
-		"message": "GetCredential",
+	resp := GetCredentialResponse{
+		ID:            gotCredential.ID,
+		Credential:    gotCredential.Credential,
+		CredentialJWT: gotCredential.CredentialJWT,
 	}
 
 	return framework.Respond(ctx, w, resp, http.StatusOK)
