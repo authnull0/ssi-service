@@ -36,10 +36,10 @@ func Respond(ctx context.Context, w http.ResponseWriter, data any, statusCode in
 
 	len := len(jsonData)
 
-	lenght := strconv.Itoa(len)
+	length := strconv.Itoa(len)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", lenght)
+	w.Header().Set("Content-Length", length)
 	w.WriteHeader(statusCode)
 
 	// send response payload to client
