@@ -9,7 +9,7 @@ pipeline {
         DOCKER_IMAGE = 'docker-repo.authnull.com/ssi-service:latest'
         SONARQUBE_SERVER = 'Sonar-Qube-servers'  
         SONARQUBE_PROJECT_KEY = 'Authnullproject'  
-        SONAR_HOST_URL = 'http://172.210.34.1:9000/' 
+        SONAR_HOST_URL = 'https://scan.authnull.com/' 
         SONAR_AUTH_TOKEN = credentials('sonar-auth-token')
     }
 
