@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'https://github.com/authnull0/ssi-service.git'
-        GITHUB_BRANCH = 'production-az'
+        GITHUB_BRANCH = 'development-test'
         DOCKER_REGISTRY = 'docker-repo.authnull.com'
         DOCKER_REGISTRY_CREDENTIALS = credentials('authnull-repo')
         DOCKER_IMAGE = 'docker-repo.authnull.com/ssi-service:latest'
