@@ -6,7 +6,7 @@ pipeline {
         GITHUB_BRANCH = 'production-az'
         DOCKER_REGISTRY = 'docker-repo.authnull.com'
         DOCKER_REGISTRY_CREDENTIALS = credentials('authnull-repo')
-        DOCKER_IMAGE = 'docker-repo.authnull.com/ssi-service:latest'
+        DOCKER_IMAGE = 'docker-repo.authnull.com/ssi-service:production'
         //SONARQUBE_SERVER = 'Sonar-Qube-servers'  
         //SONARQUBE_PROJECT_KEY = 'Authnullproject'  
         //SONAR_HOST_URL = 'https://scan.authnull.com/' 
