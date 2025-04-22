@@ -11,6 +11,13 @@ pipeline {
         //SONARQUBE_PROJECT_KEY = 'Authnullproject'  
         //SONAR_HOST_URL = 'https://scan.authnull.com/' 
         //SONAR_AUTH_TOKEN = credentials('sonar-auth-token')
+        AZURE_SUBSCRIPTION_ID = credentials('subscriptionId')
+        AKS_CLUSTER = 'authnull-v2'
+        RESOURCE_GROUP = 'azure-k8s'
+        K8S_NAMESPACE = 'authnull-io'
+        AZURE_CLIENT_ID = credentials('clientid')  
+        AZURE_CLIENT_SECRET = credentials('secretid') 
+        AZURE_TENANT_ID = credentials('tenantid')
     }
 
     triggers {
@@ -69,6 +76,20 @@ pipeline {
         stage('Remove Docker Image') {
             steps {
                 sh 'docker rmi ${DOCKER_IMAGE}'
+            }
+        }
+        stage('Authenticate to AKS') {
+             steps {
+                sh '''
+                    az login --service-principal -u "$AZURE_CLIENT_ID" -p "$AZURE_CLIENT_SECRET" --tenant "$AZURE_TENANT_ID"
+                    az account set --subscription "$AZURE_SUBSCRIPTION_ID"
+                    az aks get-credentials --resource-group "$RESOURCE_GROUP" --name "$AKS_CLUSTER"
+                '''
+            }
+        }
+        stage('Delete Existing Pods') {
+            steps {
+                sh 'kubectl delete pods -l app=prod-ssi-service -n ${K8S_NAMESPACE} --ignore-not-found'
             }
         }
     }
