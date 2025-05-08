@@ -26,23 +26,23 @@ pipeline {
             git credentialsId: 'pshussain-github', url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // Reference the SonarQube scanner tool installed on Jenkins
-                    def scannerHome = tool name: 'SonarQube Scanner 4.7'
-                    withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                        sh """
-                            ${scannerHome}/sonar-scanner \
-                                -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=${SONAR_HOST_URL} \
-                                -Dsonar.login=${SONAR_AUTH_TOKEN}
-                        """
-                    }
-                }
-            }
-        }        
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         script {
+        //             // Reference the SonarQube scanner tool installed on Jenkins
+        //             def scannerHome = tool name: 'SonarQube Scanner 4.7'
+        //             withSonarQubeEnv("${SONARQUBE_SERVER}") {
+        //                 sh """
+        //                     ${scannerHome}/sonar-scanner \
+        //                         -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
+        //                         -Dsonar.sources=. \
+        //                         -Dsonar.host.url=${SONAR_HOST_URL} \
+        //                         -Dsonar.login=${SONAR_AUTH_TOKEN}
+        //                 """
+        //             }
+        //         }
+        //     }
+        // }        
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t ${DOCKER_IMAGE} .'
