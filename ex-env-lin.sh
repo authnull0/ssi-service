@@ -1,0 +1,33 @@
+#!/bin/bash
+
+export SSI_SERVICE_VERSION=0.0.1
+export SSI_SERVICE_DESCRIPTION="Default configuration to be used while running the service as a single go process."
+export SSI_SERVICE_SERVER_API_HOST=0.0.0.0:5000
+export SSI_SERVICE_SERVER_DEBUG_HOST=0.0.0.0:4000
+export SSI_SERVICE_SERVER_JAGER_HOST=http://jaeger:14268/api/traces
+export SSI_SERVICE_SERVER_JAGER_ENABLED=false
+export SSI_SERVICE_SERVER_READ_TIMEOUT=5s
+export SSI_SERVICE_SERVER_WRITE_TIMEOUT=5s
+export SSI_SERVICE_SERVER_SHUTDOWN_TIMEOUT=5s
+export SSI_SERVICE_SERVER_LOG_LOCATION=logs
+export SSI_SERVICE_SERVER_LOG_LEVEL=debug
+export SSI_SERVICE_SERVER_ENABLE_SCHEMA_CACHING=true
+export SSI_SERVICE_SERVER_ENABLE_ALLOW_ALL_CORS=true
+export SSI_SERVICE_SERVICES_ENDPOINT=http://localhost:8080
+export SSI_SERVICE_SERVICES_STORAGE=redis
+export SSI_SERVICE_SERVICES_STORAGE_ADDRESS=redis-master.authnull-dev.svc.cluster.local:6379
+export SSI_SERVICE_SERVICES_STORAGE_PASSWORD=xlncxlnc2025
+export SSI_SERVICE_SERVICES_KEYSTORE_NAME=keystore
+export SSI_SERVICE_SERVICES_KEYSTORE_PASSWORD=default-password
+export SSI_SERVICE_SERVICES_DID_NAME=did
+export SSI_SERVICE_SERVICES_DID_METHODS=key,web
+export SSI_SERVICE_SERVICES_DID_RESOLUTION_METHODS=key,web,pkh,peer
+export SSI_SERVICE_SERVICES_SCHEMA_NAME=schema
+export SSI_SERVICE_SERVICES_ISSUING_NAME=issuing
+export SSI_SERVICE_SERVICES_CREDENTIAL_NAME=credential
+export SSI_SERVICE_SERVICES_MANIFEST_NAME=manifest
+export SSI_SERVICE_SERVICES_PRESENTATION_NAME=presentation
+
+echo "Environment variables for SSI service have been set."
+#to run this script, use the command:
+# source ex-env-lin.sh
