@@ -7,10 +7,10 @@ pipeline {
         DOCKER_REGISTRY = 'docker-repo.authnull.com'
         DOCKER_REGISTRY_CREDENTIALS = credentials('authnull-repo')
         DOCKER_IMAGE = 'docker-repo.authnull.com/ssi-service:production'
-        //SONARQUBE_SERVER = 'Sonar-Qube-servers'  
-        //SONARQUBE_PROJECT_KEY = 'Authnullproject'  
-        //SONAR_HOST_URL = 'https://scan.authnull.com/' 
-        //SONAR_AUTH_TOKEN = credentials('sonar-auth-token')
+        SONARQUBE_SERVER = 'Sonar-Qube-servers'  
+        SONARQUBE_PROJECT_KEY = 'Authnullproject'  
+        SONAR_HOST_URL = 'https://scan.authnull.com/' 
+        SONAR_AUTH_TOKEN = credentials('sonar-auth-token')
     }
 
     triggers {
@@ -19,14 +19,12 @@ pipeline {
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '10', daysToKeepStr: '', numToKeepStr: '10')
     }
-
     stages {
         stage('Checkout') {
             steps {
             git credentialsId: 'pshussain-github', url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
             }
         }
-        /*
         stage('SonarQube Analysis') {
             steps {
                 script {
@@ -44,8 +42,6 @@ pipeline {
                 }
             }
         }
-         */
-        
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t ${DOCKER_IMAGE} .'
