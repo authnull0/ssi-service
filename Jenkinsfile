@@ -12,6 +12,7 @@ pipeline {
         SONAR_HOST_URL = 'https://scan.authnull.com/' 
         SONAR_AUTH_TOKEN = credentials('sonar-auth-token')
         SERVICE_NAME = 'ssi-service'
+        TEAMS_WEBHOOK_URL = credentials('teams-webhook-aipolicy')
     }
 
     triggers {
@@ -77,6 +78,46 @@ pipeline {
         stage('Remove Docker Image') {
             steps {
                 sh 'docker rmi ${DOCKER_IMAGE}'
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                def qualityGate = waitForQualityGate()
+                def reportUrl = "${SONAR_HOST_URL}/dashboard?id=${SONARQUBE_PROJECT_KEY}"
+            
+                // Step 2: Create Teams MessageCard payload
+                def payload = """
+                {
+                    "@type": "MessageCard",
+                    "@context": "http://schema.org/extensions",
+                    "themeColor": "${qualityGate.status == 'OK' ? '00FF00' : 'FF0000'}",
+                    "summary": "SonarQube Report - ${SERVICE_NAME}",
+                    "title": "${qualityGate.status == 'OK' ? '✅ PASSED' : '❌ FAILED'} - ${SERVICE_NAME}",
+                    "text": "**Project:** ${SERVICE_NAME}\\n\\n**Quality Gate:** ${qualityGate.status}\\n\\n[View Full Report](${reportUrl})",
+                    "potentialAction": [{
+                        "@type": "OpenUri",
+                        "name": "Open in SonarQube",
+                        "targets": [{
+                            "os": "default",
+                            "uri": "${reportUrl}"
+                        }]
+                    }]
+                }
+                """
+
+                // Debugging (optional)
+                writeFile file: 'teams_payload.json', text: payload
+                
+                // Use withCredentials to safely handle the secret / send to teams
+                withCredentials([string(credentialsId: 'teams-webhook-aipolicy', variable: 'TEAMS_WEBHOOK_URL')]) {
+                    sh """
+                        curl -X POST -H "Content-Type: application/json" \
+                        -d @teams_payload.json \
+                        ${TEAMS_WEBHOOK_URL}
+                    """
+                }
             }
         }
     }
