@@ -12,5 +12,5 @@ ENV APPHOME=/app
 WORKDIR $APPHOME
 COPY --from=builder /main ./
 RUN chmod +x ./main
-EXPOSE 5000
+EXPOSE 8080
 CMD [ "./main" ]
