@@ -11,6 +11,7 @@ pipeline {
         SONARQUBE_PROJECT_KEY = 'Authnullproject'  
         SONAR_HOST_URL = 'https://scan.authnull.com/' 
         SONAR_AUTH_TOKEN = credentials('sonar-auth-token')
+        GITHUB_TOKEN = credentials('my-test-token')
     }
 
     triggers {
@@ -22,7 +23,14 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-            git credentialsId: 'pshussain-github', url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
+                 // ✅ Use Jenkins' built-in checkout which already uses the credentials from job config
+                 checkout scm
+
+                 // ✅ Force authenticated remote URL to fix anonymous fetch issue
+                //sh """
+                  //  git remote set-url origin https://my-test-token:${GITHUB_TOKEN}@github.com/authnull0/dashboard-service.git 
+                    //git fetch origin ${GITHUB_BRANCH}
+               // """
             }
         }
         stage('SonarQube Analysis') {
