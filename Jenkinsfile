@@ -13,6 +13,7 @@ pipeline {
         SONAR_AUTH_TOKEN = credentials('sonar-auth-token')
         SERVICE_NAME = 'ssi-service'
         TEAMS_WEBHOOK_URL = credentials('teams-webhook-aipolicy')
+        GITHUB_TOKEN = credentials('my-test-token')
     }
 
     triggers {
@@ -25,7 +26,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-            git credentialsId: 'pshussain-github', url: "${GITHUB_REPO}", branch: "${GITHUB_BRANCH}"
+                 checkout scm
             }
         }
         stage('SonarQube Analysis') {
