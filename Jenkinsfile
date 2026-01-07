@@ -4,9 +4,14 @@ pipeline {
     environment {
         GITHUB_REPO = 'https://github.com/authnull0/ssi-service.git'
         GITHUB_BRANCH = 'production-az'
-        DOCKER_REGISTRY = 'docker-repo.authnull.com'
-        DOCKER_REGISTRY_CREDENTIALS = credentials('authnull-repo')
-        DOCKER_IMAGE = 'docker-repo.authnull.com/ssi-service:production'
+        PRIVATE_TAG = 'production'
+        PUBLIC_TAG  = '1.0.0'
+        DOCKER_REGISTRY_PRIVATE = 'docker-repo.authnull.com'
+        DOCKER_REGISTRY_PUBLIC= 'docker-repo-public.authnull.com'
+        DOCKER_PRIVATE_CREDENTIALS = credentials('authnull-repo')
+        DOCKER_PUBLIC_CREDENTIALS = credentials('docker-repo-public')
+        DOCKER_IMAGE_PRIVATE = "docker-repo.authnull.com/ssi-service:${PRIVATE_TAG}"
+        DOCKER_IMAGE_PUBLIC = "docker-repo-public.authnull.com/ssi-service:${PUBLIC_TAG}"
 //        SONARQUBE_SERVER = 'Sonar-Qube-servers'  
 //        SONARQUBE_PROJECT_KEY = 'Authnullproject'  
 //        SONAR_HOST_URL = 'https://scan.authnull.com/' 
@@ -50,29 +55,64 @@ pipeline {
 //                }
 //            }
 //        }
-        stage('Build Docker Image') {
+                // Build Stage
+
+        stage('Build Private Image') {
             steps {
-                sh 'docker build -t ${DOCKER_IMAGE} .'
+                sh """
+                    echo "Building PRIVATE image: ${DOCKER_IMAGE_PRIVATE}"
+                    docker build -t ${DOCKER_IMAGE_PRIVATE} .
+                """
             }
         }
-        stage('Login to Docker Artifactory') {
+
+        stage('Build Public Image') {
             steps {
-                sh 'echo ${DOCKER_REGISTRY_CREDENTIALS_PSW} | docker login ${DOCKER_REGISTRY} -u ${DOCKER_REGISTRY_CREDENTIALS_USR} --password-stdin'
+                sh """
+                    echo "Building PUBLIC image: ${DOCKER_IMAGE_PUBLIC}"
+                    docker build -t ${DOCKER_IMAGE_PUBLIC} .
+                """
             }
         }
-        stage('Push Docker Image') {
+
+        // Push Stage
+
+        stage('Push Private Image') {
             steps {
-                sh 'docker push ${DOCKER_IMAGE}'
+                withCredentials([usernamePassword(credentialsId: 'authnull-repo', usernameVariable: 'USR', passwordVariable: 'PASS')]) {
+                    sh """
+                        echo "Logging in to PRIVATE registry"
+                        echo "\$PASS" | docker login ${DOCKER_REGISTRY_PRIVATE} -u "\$USR" --password-stdin
+
+                        docker push ${DOCKER_IMAGE_PRIVATE}
+                        docker logout ${DOCKER_REGISTRY_PRIVATE}
+                    """
+                }
             }
         }
-        stage('Logout from Docker Artifactory') {
+
+        stage('Push Public Image') {
             steps {
-                sh 'docker logout ${DOCKER_REGISTRY}'
+                withCredentials([usernamePassword(credentialsId: 'docker-repo-public', usernameVariable: 'USR', passwordVariable: 'PASS')]) {
+                    sh """
+                        echo "Logging in to PUBLIC registry"
+                        echo "\$PASS" | docker login ${DOCKER_REGISTRY_PUBLIC} -u "\$USR" --password-stdin
+
+                        docker push ${DOCKER_IMAGE_PUBLIC}
+                        docker logout ${DOCKER_REGISTRY_PUBLIC}
+                    """
+                }
             }
         }
-        stage('Remove Docker Image') {
+
+        // Cleanup Stage
+
+        stage('Cleanup Images') {
             steps {
-                sh 'docker rmi ${DOCKER_IMAGE}'
+                sh """
+                    docker rmi ${DOCKER_IMAGE_PRIVATE} || true
+                    docker rmi ${DOCKER_IMAGE_PUBLIC} || true
+                """
             }
         }
     }
