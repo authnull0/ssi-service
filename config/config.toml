@@ -26,9 +26,9 @@ service_endpoint = "http://localhost:8080"
 storage = "redis"
 
 [services.storage_option]
-address = "redis-master.authnull-io.svc.cluster.local:6379"
-#password = "PrA6zPWF7b"
-password = "8XGN8FP6eo"
+address = "${REDIS_ADDR:-redis:6379}"
+password = "${REDIS_PASSWORD}"
+#password = "8XGN8FP6eo"
 
 # per-service configuration
 [services.keystore]
