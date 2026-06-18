@@ -5,10 +5,10 @@ pipeline {
         GITHUB_REPO = 'https://github.com/authnull0/ssi-service.git'
         GITHUB_BRANCH = 'onprem'
         PUBLIC_TAG  = '1.0.0-onprem'
-        DOCKER_REGISTRY_PUBLIC= 'docker-repo-public.authnull.com'
-        DOCKER_PUBLIC_CREDENTIALS = credentials('docker-repo-public')
-        DOCKER_IMAGE_PUBLIC = "docker-repo-public.authnull.com/ssi-service:${PUBLIC_TAG}"
-        GITHUB_TOKEN = credentials('my-test-token')
+        DOCKER_REGISTRY_PUBLIC= 'docker-repo-public-v2.authnull.com'
+        DOCKER_PUBLIC_CREDENTIALS = credentials('docker-repo-public-v2')
+        DOCKER_IMAGE_PUBLIC = "docker-repo-public-v2.authnull.com/ssi-service:${PUBLIC_TAG}"
+        GITHUB_TOKEN = credentials('ram-Github-credentials')
     }
 
     triggers {
@@ -44,7 +44,7 @@ pipeline {
 
         stage('Push Public Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-repo-public', usernameVariable: 'USR', passwordVariable: 'PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-repo-public-v2', usernameVariable: 'USR', passwordVariable: 'PASS')]) {
                     sh """
                         echo "Logging in to PUBLIC registry"
                         echo "\$PASS" | docker login ${DOCKER_REGISTRY_PUBLIC} -u "\$USR" --password-stdin
